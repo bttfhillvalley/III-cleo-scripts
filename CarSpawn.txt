@@ -1,0 +1,45 @@
+{$CLEO .cs}
+{$INCLUDE Common/CleoConstants.txt}
+const
+    KEY_SPAWN_DELOREAN = 190 // "."
+end
+0000:
+thread 'CARSPWN'
+int model
+int vehicle
+float x
+float y
+float z
+float angle
+
+while true
+    wait 0
+    if and
+        8443:   not player $PLAYER_CHAR sitting_in_any_car
+        is_key_pressed KEY_SPAWN_DELOREAN
+    then
+        cleo_call @LoadModel 1 DELOREAN_MODEL ret vehicle
+        stream_custom_script "Delorean.s" vehicle 0x5d08 20151025 1000 19551112 2204
+        0AB3: var TIME_MACHINE = vehicle
+        wait 1000
+    end
+end
+
+:LoadModel
+0247: request_model model
+038B: load_requested_models
+
+:LoadModelWait
+if
+    8248:   not model available
+then
+    wait 0
+    jump @LoadModelWait
+end
+04C4: create_coordinate x y z from_actor $PLAYER_ACTOR offset 2.0 0.0 0.0
+0172: angle = actor $PLAYER_ACTOR z_angle
+00A5: vehicle = create_car model at x y z
+0175: set_car vehicle z_angle_to angle
+wait 0
+0249: release_model model
+cleo_return 1 vehicle

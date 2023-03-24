@@ -1,0 +1,13 @@
+{$CLEO .s}
+{$INCLUDE ../Common/CleoConstants.txt}
+0000:
+int vehicle
+float value
+3F86: attach_sound "delorean/hover_loop.wav" to_car vehicle pos 0.0 0.0 0.0 loop 1 size 20.0
+value = 0.0
+while value < 0x3f000000
+    3F98: set_sound "delorean/hover_loop.wav" index vehicle volume value
+    wait 0
+    000B: value += 0x3c23d70a // 0.01
+end
+0A93: terminate_this_custom_script
