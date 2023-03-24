@@ -1,2 +1,4 @@
 CLEO_PLUGINS/*
 cleanup.sh
+*.s
+*.cs
